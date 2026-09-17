@@ -47,23 +47,25 @@ export const NewCommentForm: React.FC<Props> = ({ onSubmit }) => {
     setBodyError('');
     let hasError = false;
 
-      if (!name.trim() || !name.trim().length) {
-        setNameError(ErrorType.NoName);
-        hasError = true;
-      }
+    if (!name.trim() || !name.trim().length) {
+      setNameError(ErrorType.NoName);
+      hasError = true;
+    }
 
-      if (!email.trim() || !email.trim().length) {
-        setEmailError(ErrorType.NoEmail);
-        hasError = true;
-      }
+    if (!email.trim() || !email.trim().length) {
+      setEmailError(ErrorType.NoEmail);
+      hasError = true;
+    }
 
-      if (!body.trim() || !body.trim().length) {
-        setBodyError(ErrorType.NoText);
-        hasError = true;
-      }
-     if (hasError) {
+    if (!body.trim() || !body.trim().length) {
+      setBodyError(ErrorType.NoText);
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
-     }
+    }
+
     setIsSubmitting(true);
 
     try {

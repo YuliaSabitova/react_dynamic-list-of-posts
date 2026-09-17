@@ -20,12 +20,12 @@ export const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<ErrorType | ''>('');
   const [selectedUserId, setSelectedUserId] = useState<User['id'] | null>(null);
-  const [postId, setPostId] = useState<Post[]>([]);
+  const [postsId, setPostsId] = useState<Post[]>([]);
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
 
   const loadUsers = useCallback(() => {
-    setPostId([]);
+    setPostsId([]);
     setErrorMessage('');
     setIsLoading(true);
 
@@ -42,7 +42,7 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     if (selectedUserId === null) {
-       return;
+      return;
     }
 
     const loadPosts = async () => {
@@ -53,7 +53,7 @@ export const App: React.FC = () => {
 
         const post = await postServise.getPosts(selectedUserId);
 
-        setPostId(post as Post[]);
+        setPostsId(post as Post[]);
       } catch {
         setErrorMessage(ErrorType.DownloadError);
       } finally {
@@ -70,10 +70,12 @@ export const App: React.FC = () => {
 
   const openPost = async (postId: number | null) => {
     if (postId === null) {
-    setSelectedPostId(null);
-    setComments([]);
-    return;
-  }
+      setSelectedPostId(null);
+      setComments([]);
+
+      return;
+    }
+
     setIsLoading(true);
     setSelectedPostId(postId);
     setErrorMessage('');
@@ -101,10 +103,10 @@ export const App: React.FC = () => {
   async function handleDeleteComment(commentId: number) {
     setErrorMessage('');
     setComments(currentComments =>
-        currentComments.filter(comment => comment.id !== commentId),
-      );
+      currentComments.filter(comment => comment.id !== commentId),
+    );
 
-      try {
+    try {
       await postServise.deleteComments(commentId);
     } catch (error) {
       setErrorMessage(ErrorType.Delete);
@@ -146,12 +148,11 @@ export const App: React.FC = () => {
 
                 {!isLoading && !errorMessage && selectedUserId !== null && (
                   <>
-                    {postId.length > 0 ? (
+                    {postsId.length > 0 ? (
                       <PostsList
-                        postApi={postId}
+                        postApi={postsId}
                         onOpenPost={openPost}
                         selectedPostId={selectedPostId}
-
                       />
                     ) : (
                       <div
@@ -178,9 +179,9 @@ export const App: React.FC = () => {
             )}
           >
             <div className="tile is-child box is-success ">
-              {selectedPostId && postId.length > 0 && (
+              {selectedPostId && postsId.length > 0 && (
                 <PostDetails
-                  postsApi={postId}
+                  postsApi={postsId}
                   comments={comments}
                   isLoading={isLoading}
                   errorMessage={errorMessage}
